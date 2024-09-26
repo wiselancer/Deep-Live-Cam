@@ -984,7 +984,12 @@ def create_webcam_preview():
         if not modules.globals.map_faces:
             # Select and save face image only once
             if source_image is None and modules.globals.source_path:
-                source_image = get_one_face(cv2.imread(modules.globals.source_path))
+                source_image_path = modules.globals.source_path
+                source_image = cv2.imread(source_image_path)
+                if source_image is None:
+                    update_status(f"Error: Unable to load image from path: {source_image_path}")
+                    return
+                source_image = get_one_face(source_image)
 
             for frame_processor in frame_processors:
                 temp_frame = frame_processor.process_frame(source_image, temp_frame)
