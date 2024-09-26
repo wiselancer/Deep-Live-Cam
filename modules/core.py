@@ -82,7 +82,9 @@ def parse_args() -> None:
     if 'coreml' in args.execution_provider:
         ort.set_default_logger_severity(3)  # Suppress info logs
         modules.globals.execution_providers = ['CoreMLExecutionProvider', 'CPUExecutionProvider']
+        print("Using CoreMLExecutionProvider with GPU.")
     else:
+        print("Using execution providers:", args.execution_provider)
         modules.globals.execution_providers = decode_execution_providers(args.execution_provider)
     modules.globals.execution_threads = args.execution_threads
 
@@ -250,7 +252,8 @@ def destroy(to_quit=True) -> None:
 
 
 def run() -> None:
-    parse_args()
+    args = parse_args()
+    print("Available execution providers:", ort.get_available_providers())
     if not pre_check():
         return
     for frame_processor in get_frame_processors_modules(modules.globals.frame_processors):
