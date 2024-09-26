@@ -12,7 +12,7 @@ import signal
 import shutil
 import argparse
 import torch
-import onnxruntime
+import onnxruntime as ort
 import tensorflow
 
 import modules.globals
@@ -77,7 +77,12 @@ def parse_args() -> None:
     modules.globals.live_mirror = args.live_mirror
     modules.globals.live_resizable = args.live_resizable
     modules.globals.max_memory = args.max_memory
-    modules.globals.execution_providers = decode_execution_providers(args.execution_provider)
+    # Ensure CoreMLExecutionProvider uses GPU
+    if 'coreml' in args.execution_provider:
+        ort.set_default_logger_severity(3)  # Suppress info logs
+        modules.globals.execution_providers = ['CoreMLExecutionProvider', 'CPUExecutionProvider']
+    else:
+        modules.globals.execution_providers = decode_execution_providers(args.execution_provider)
     modules.globals.execution_threads = args.execution_threads
 
     #for ENHANCER tumbler:
