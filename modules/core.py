@@ -51,7 +51,7 @@ def parse_args() -> None:
     if platform.system().lower() == 'darwin' and platform.machine().startswith('arm'):
         default_execution_provider = ['coreml']
     program.add_argument('--execution-provider', help='execution provider', dest='execution_provider', default=default_execution_provider, choices=suggest_execution_providers(), nargs='+')
-    program.add_argument('--execution-threads', help='number of execution threads', dest='execution_threads', type=int, default=suggest_execution_threads())
+    program.add_argument('--execution-threads', help='number of execution threads', dest='execution_threads', type=int, default=8)
     program.add_argument('-v', '--version', action='version', version=f'{modules.metadata.name} {modules.metadata.version}')
 
     # register deprecated args
